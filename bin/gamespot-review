@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/gamespot_review'
+
+GamespotReview::CLI.new.start

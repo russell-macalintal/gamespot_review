@@ -1,0 +1,3 @@
+class GamespotReview::Scaper
+
+end
