@@ -7,15 +7,34 @@ class GamespotReview::CLI
 
   def greeting
     puts "Welcome to the Gamespot Review CLI!"
-    puts "This program is intended to show you information about 105 of the latest videogames that have been reviewed on Gamespot.com"
+    puts "This program is intended to show you information about the latest videogames that have been reviewed on Gamespot.com!"
   end
 
   def call_for_input
-    puts "Select which range of videogames you'd like to see: [1]-9, [10]-19, [20]-29, [30]-39, [40]-49, [50]-59, [60]-69. [70]-79, [80]"
+    input = nil
+    while input != "exit"
+      puts "Select which range of videogames you'd like to see or [exit]: "
+      puts "[1]-10, [11]-20, [21]-30, [31]-40, [41]-50, [51]-60, [61]-70. [71]-80, [81]-90, [91]-100"
+      input = gets.strip.downcase
+
+      if input.to_i > 0
+        list_games(input.to_i)
+      elsif input == "exit"
+        return
+      else
+        puts "Unknown command or range. Please try again.\n\n"
+      end
+    end
+
   end
 
-  def list_games
-
+  def list_games(start_range)
+    if [1,11,21,31,41,51,61,71,81,91].include?(start_range)
+      puts "Here is a list of games [#{start_range} - #{start_range+9}]:"
+      puts "#{start_range}. GAMES LIST"
+    else
+      puts "Not correct range"
+    end
   end
 
   def show_game_info
