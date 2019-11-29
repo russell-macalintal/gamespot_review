@@ -24,6 +24,7 @@ class GamespotReview::Scraper
       game.score = game_info.css("span.content").text
       game.blurb = game_info.css("p.media-deck").text.strip
       game.review_url = "https://www.gamespot.com" + game_info.css("a").first["href"]
+      game_info.css("li.system--pill").each {|console| game.review_console << console.text}
     end
     self.add_game_info
     binding.pry
@@ -32,17 +33,11 @@ class GamespotReview::Scraper
   def add_game_info
     GamespotReview::Game.all.each do |game|
       more_info = self.get_page_info(game.review_url)
-      # game.release_console =
       game.release_date = more_info.css("ul.kubrick-info__releasedate li span").text.sub('released', '')
       game.reviewer = more_info.css("p.news-byline a").text
       game.reviewer_profile = more_info.css("p.news-byline a").empty? ? "Not available" : "https://www.gamespot.com" + more_info.css("p.news-byline a").first["href"]
-      # game.review_date =
-      # game.review_text =
+      game.review_date = more_info.css("p.news-byline time").text.sub(/( a.*)/, '')
     end
-  end
-
-  def list_games
-
   end
 
 end
