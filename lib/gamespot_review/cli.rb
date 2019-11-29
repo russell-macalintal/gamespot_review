@@ -41,4 +41,8 @@ class GamespotReview::CLI
 
   end
 
+  def find_by_title(title)
+
+  end
+
 end
