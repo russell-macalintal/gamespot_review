@@ -58,7 +58,7 @@ class GamespotReview::CLI
       if [1,11,21,31,41,51,61,71,81,91].include?(input.to_i)
         list_games(input.to_i)
       elsif input == "exit"
-        return
+        exit
       else
         puts "\nUnknown command or range.".colorize(:red) + " Please type in a number shown within the " + "[brackets]".colorize(:green) + "."
       end
@@ -70,13 +70,15 @@ class GamespotReview::CLI
     input = nil
     while input != "back"
       GamespotReview::Game.list_games(start_range)
-      puts "Enter the " + "number".colorize(:green) + " of the game you'd like to know more about or go " + "[back]".colorize(:yellow) + " to the menu:"
+      puts "Enter the " + "number".colorize(:green) + " of the game you'd like to know more about, go " + "[back]".colorize(:yellow) + " to the menu, or " + "[exit]".colorize(:red) + ":"
       input = gets.strip.downcase
 
       if input.to_i.between?(start_range, start_range+9)
         GamespotReview::Game.add_and_show_game_info(input.to_i)
       elsif input == "back"
         return
+      elsif input == "exit"
+        exit
       else
         puts "Invalid input.".colorize(:red) + " Please select a " + "number".colorize(:green) + " associated to a game on this list.\n"
       end
@@ -84,7 +86,7 @@ class GamespotReview::CLI
   end
 
   # def find_by_title(title)
-  #
+  # FUTURE IMPLEMENTATION
   # end
 
 end

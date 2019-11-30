@@ -14,7 +14,7 @@ class GamespotReview::Game
   def self.create_games
     GamespotReview::Scraper.get_game_info.each do |game_info|
       game = self.new
-      game.title = game_info.css("h3.media-title").text.sub(/( R.*)/, '')
+      game.title = game_info.css("h3.media-title").text.sub(/( Review.*)/, '')
       game.score = game_info.css("span.content").text
       game.blurb = game_info.css("p.media-deck").text.strip
       game.review_url = "https://www.gamespot.com" + game_info.css("a").first["href"]
@@ -47,12 +47,12 @@ class GamespotReview::Game
   def show_info
     puts "============================================="
     puts "Here is a summary of the game you have selected:"
-    puts "Title:".ljust(20) + "#{self.title}"
-    puts "Gamespot Score:".ljust(20) + "#{self.score}"
-    puts "Release Date:".ljust(20) + "#{self.release_date}"
-    puts "Reviewed For:".ljust(20) + "#{self.review_console.join(", ")}"
-    puts "Reviewed By:".ljust(20) + "#{self.reviewer} (" + "#{self.reviewer_profile}".colorize(:blue) + ") on #{self.review_date}"
-    puts "Full Review Link:".ljust(20) + "#{self.review_url}".colorize(:blue)
+    puts "Title:".ljust(20).colorize(:cyan) + "#{self.title}"
+    puts "Gamespot Score:".ljust(20).colorize(:cyan) + "#{self.score}"
+    puts "Release Date:".ljust(20).colorize(:cyan) + "#{self.release_date}"
+    puts "Reviewed For:".ljust(20).colorize(:cyan) + "#{self.review_console.join(", ")}"
+    puts "Reviewed By:".ljust(20).colorize(:cyan) + "#{self.reviewer} (" + "#{self.reviewer_profile}".colorize(:blue) + ") on #{self.review_date}"
+    puts "Full Review Link:".ljust(20).colorize(:cyan) + "#{self.review_url}".colorize(:blue)
     puts self.blurb
     puts "=============================================\n\n"
     puts "Press [ENTER] to return to the list"
