@@ -2,5 +2,5 @@
 
 require_relative '../lib/gamespot_review'
 
-# GamespotReview::CLI.new.start
-GamespotReview::Scraper.new.create_games
+GamespotReview::CLI.new.start
+# GamespotReview::Scraper.new.create_games

@@ -7,6 +7,7 @@ class GamespotReview::CLI
 
   def greeting
     puts "Welcome to the Gamespot Review CLI!"
+    GamespotReview::Game.create_games
     puts "This program is intended to show you information about the latest videogames that have been reviewed on Gamespot.com!"
   end
 
@@ -31,14 +32,21 @@ class GamespotReview::CLI
   def list_games(start_range)
     if [1,11,21,31,41,51,61,71,81,91].include?(start_range)
       puts "Here is a list of games [#{start_range} - #{start_range+9}]:"
-      puts "#{start_range}. GAMES LIST"
+      GamespotReview::Game.list_games(start_range)
+
+      input = gets.strip.downcase
+
+      if input.to_i >= start_range
+        show_game_info(input.to_i)
+      end
+
     else
-      puts "Not correct range"
+      puts "Invalid start range. Please type in a number shown within the [brackets]:\n\n"
     end
   end
 
-  def show_game_info
-
+  def show_game_info(game_selected)
+    GamespotReview::Game.add_show_game_info(game_selected)
   end
 
   def find_by_title(title)
