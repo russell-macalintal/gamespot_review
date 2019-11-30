@@ -22,7 +22,16 @@ class GamespotReview::Game
     end
   end
 
-  def self.add_show_game_info(game_selected)
+  def self.list_games(start_range)
+    puts "---------------------------------------------"
+    puts "GAMES [#{start_range} - #{start_range+9}]:"
+    GamespotReview::Game.all[start_range-1..start_range+8].each.with_index(start_range) do |game, index|
+      puts "#{index}.".ljust(5).colorize(:green) + "#{game.title}  -  #{game.score}"
+    end
+    puts "---------------------------------------------"
+  end
+
+  def self.add_and_show_game_info(game_selected)
     self.all[game_selected-1].add_attributes
     self.all[game_selected-1].show_info
   end
@@ -30,29 +39,24 @@ class GamespotReview::Game
   def add_attributes
     more_info = GamespotReview::Scraper.get_page_info(self.review_url)
     self.release_date = more_info.css("ul.kubrick-info__releasedate li span").text.sub('released', '')
-    self.reviewer = more_info.css("p.news-byline a").text
+    self.reviewer = more_info.css("p.news-byline a").text.sub(/(@.*)/, '')
     self.reviewer_profile = more_info.css("p.news-byline a").empty? ? "Not available" : "https://www.gamespot.com" + more_info.css("p.news-byline a").first["href"]
     self.review_date = more_info.css("p.news-byline time").text.sub(/( a.*)/, '')
   end
 
-    # self.all.each do |game|
-    #   more_info = GamespotReview::Scraper.get_page_info(game.review_url)
-    #   game.release_date = more_info.css("ul.kubrick-info__releasedate li span").text.sub('released', '')
-    #   game.reviewer = more_info.css("p.news-byline a").text
-    #   game.reviewer_profile = more_info.css("p.news-byline a").empty? ? "Not available" : "https://www.gamespot.com" + more_info.css("p.news-byline a").first["href"]
-    #   game.review_date = more_info.css("p.news-byline time").text.sub(/( a.*)/, '')
-    # end
-
   def show_info
+    puts "============================================="
     puts "Here is a summary of the game you have selected:"
-    puts "Title:  #{self.title}"
-    puts "Gamespot Score:  #{self.score}"
-  end
-
-  def self.list_games(start_range)
-    GamespotReview::Game.all[start_range..start_range+9].each.with_index(start_range) do |game, index|
-      puts "#{index}.  #{game.title}  ---  #{game.score}"
-    end
+    puts "Title:".ljust(20) + "#{self.title}"
+    puts "Gamespot Score:".ljust(20) + "#{self.score}"
+    puts "Release Date:".ljust(20) + "#{self.release_date}"
+    puts "Reviewed For:".ljust(20) + "#{self.review_console.join(", ")}"
+    puts "Reviewed By:".ljust(20) + "#{self.reviewer} (" + "#{self.reviewer_profile}".colorize(:blue) + ") on #{self.review_date}"
+    puts "Full Review Link:".ljust(20) + "#{self.review_url}".colorize(:blue)
+    puts self.blurb
+    puts "=============================================\n\n"
+    puts "Press [ENTER] to return to the list"
+    gets
   end
 
 end
