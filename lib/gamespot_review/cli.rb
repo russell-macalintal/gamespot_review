@@ -2,6 +2,7 @@ class GamespotReview::CLI
 
   def start
     self.greeting
+    self.sort_alphabetically
     self.interact
     self.farewell
   end
@@ -19,6 +20,22 @@ class GamespotReview::CLI
     puts "\n*********************************************"
     puts "Thank you for using the Gamespot Review CLI!"
     puts "Goodbye"
+  end
+
+  def sort_alphabetically
+    input = nil
+    puts "Would you like to sort the titles by alphabetical order? " + "[y/n]".colorize(:green)
+    input = gets.strip.downcase
+
+    if input == "y" || input == "yes"
+      GamespotReview::Game.all.sort_by! {|game| game.title}
+    elsif input == "n" || input == "no"
+      return
+    elsif input == "exit"
+      exit
+    else
+      sort_alphabetically
+    end
   end
 
   def interact

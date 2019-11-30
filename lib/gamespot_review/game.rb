@@ -38,7 +38,7 @@ class GamespotReview::Game
 
   def add_attributes
     more_info = GamespotReview::Scraper.get_page_info(self.review_url)
-    self.release_date = more_info.css("ul.kubrick-info__releasedate li span").text.sub('released', '')
+    self.release_date = more_info.css("ul.kubrick-info__releasedate li span").first.text.sub('released', '')
     self.reviewer = more_info.css("p.news-byline a").text.sub(/(@.*)/, '')
     self.reviewer_profile = more_info.css("p.news-byline a").empty? ? "Not available" : "https://www.gamespot.com" + more_info.css("p.news-byline a").first["href"]
     self.review_date = more_info.css("p.news-byline time").text.sub(/( a.*)/, '')
