@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Follow CLI prompts to select a range of recently reviewed games to display, then select a specific game to show its detailed information.
 
 ## Development
 
