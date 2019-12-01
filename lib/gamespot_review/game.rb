@@ -2,7 +2,11 @@ class GamespotReview::Game
   attr_accessor :title, :score, :blurb, :review_url, :review_console, :release_date, :reviewer, :reviewer_profile, :review_date
   @@all = []
 
-  def initialize
+  def initialize(title, score, blurb, review_url)
+    @title = title
+    @score = score
+    @blurb = blurb
+    @review_url = review_url
     @review_console = []
     @@all << self
   end
@@ -13,19 +17,23 @@ class GamespotReview::Game
 
   def self.create_games
     GamespotReview::Scraper.get_game_info.each do |game_info|
-      game = self.new
-      game.title = game_info.css("h3.media-title").text.sub(/( Review.*)/, '')
-      game.score = game_info.css("span.content").text
-      game.blurb = game_info.css("p.media-deck").text.strip
-      game.review_url = "https://www.gamespot.com" + game_info.css("a").first["href"]
-      game_info.css("li.system--pill").each {|console| game.review_console << console.text}
+      title = game_info.css("h3.media-title").text.sub(/( Review.*)/, '')
+      score = game_info.css("span.content").text
+      blurb = game_info.css("p.media-deck").text.strip
+      review_url = "https://www.gamespot.com" + game_info.css("a").first["href"]
+      game = self.new(title, score, blurb, review_url)
+      game_info.css("li.system--pill").each do |console|
+        if !game.review_console.include?(console.text)
+          game.review_console << console.text
+        end
+      end
     end
   end
 
   def self.list_games(start_range)
     puts "---------------------------------------------"
     puts "GAMES [#{start_range} - #{start_range+9}]:"
-    GamespotReview::Game.all[start_range-1..start_range+8].each.with_index(start_range) do |game, index|
+    self.all[start_range-1..start_range+8].each.with_index(start_range) do |game, index|
       puts "#{index}.".ljust(5).colorize(:green) + "#{game.title}  -  #{game.score}"
     end
     puts "---------------------------------------------"
@@ -37,23 +45,23 @@ class GamespotReview::Game
   end
 
   def add_attributes
-    more_info = GamespotReview::Scraper.get_page_info(self.review_url)
-    self.release_date = more_info.css("ul.kubrick-info__releasedate li span").first.text.sub('released', '')
-    self.reviewer = more_info.css("p.news-byline a").text.sub(/(@.*)/, '')
-    self.reviewer_profile = more_info.css("p.news-byline a").empty? ? "Not available" : "https://www.gamespot.com" + more_info.css("p.news-byline a").first["href"]
-    self.review_date = more_info.css("p.news-byline time").text.sub(/( a.*)/, '')
+    more_info = GamespotReview::Scraper.get_page_info(@review_url)
+    @release_date = more_info.css("ul.kubrick-info__releasedate li span").first.text.sub('released', '')
+    @reviewer = more_info.css("p.news-byline a").text.sub(/(@.*)/, '')
+    @reviewer_profile = more_info.css("p.news-byline a").empty? ? "Not available" : "https://www.gamespot.com" + more_info.css("p.news-byline a").first["href"]
+    @review_date = more_info.css("p.news-byline time").text.sub(/( a.*)/, '')
   end
 
   def show_info
     puts "============================================="
     puts "Here is a summary of the game you have selected:"
-    puts "Title:".ljust(20).colorize(:cyan) + "#{self.title}"
-    puts "Gamespot Score:".ljust(20).colorize(:cyan) + "#{self.score}"
-    puts "Release Date:".ljust(20).colorize(:cyan) + "#{self.release_date}"
-    puts "Reviewed For:".ljust(20).colorize(:cyan) + "#{self.review_console.join(", ")}"
-    puts "Reviewed By:".ljust(20).colorize(:cyan) + "#{self.reviewer} (" + "#{self.reviewer_profile}".colorize(:blue) + ") on #{self.review_date}"
-    puts "Full Review Link:".ljust(20).colorize(:cyan) + "#{self.review_url}".colorize(:blue)
-    puts self.blurb
+    puts "Title:".ljust(20).colorize(:cyan) + "#{@title}"
+    puts "Gamespot Score:".ljust(20).colorize(:cyan) + "#{@score}"
+    puts "Release Date:".ljust(20).colorize(:cyan) + "#{@release_date}"
+    puts "Reviewed For:".ljust(20).colorize(:cyan) + "#{@review_console.join(", ")}"
+    puts "Reviewed By:".ljust(20).colorize(:cyan) + "#{@reviewer} (" + "#{@reviewer_profile}".colorize(:blue) + ") on #{@review_date}"
+    puts "Full Review Link:".ljust(20).colorize(:cyan) + "#{@review_url}".colorize(:blue)
+    puts @blurb
     puts "=============================================\n\n"
     puts "Press [ENTER] to return to the list"
     gets

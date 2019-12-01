@@ -32,6 +32,7 @@ class GamespotReview::CLI
     elsif input == "n" || input == "no"
       return
     elsif input == "exit"
+      self.farewell
       exit
     else
       sort_alphabetically
@@ -58,7 +59,7 @@ class GamespotReview::CLI
       if [1,11,21,31,41,51,61,71,81,91].include?(input.to_i)
         list_games(input.to_i)
       elsif input == "exit"
-        exit
+        return
       else
         puts "\nUnknown command or range.".colorize(:red) + " Please type in a number shown within the " + "[brackets]".colorize(:green) + "."
       end
@@ -78,6 +79,7 @@ class GamespotReview::CLI
       elsif input == "back"
         return
       elsif input == "exit"
+        self.farewell
         exit
       else
         puts "Invalid input.".colorize(:red) + " Please select a " + "number".colorize(:green) + " associated to a game on this list.\n"
