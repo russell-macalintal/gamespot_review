@@ -24,12 +24,15 @@ class GamespotReview::CLI
 
   def sort_alphabetically
     input = nil
-    puts "Would you like to sort the titles by alphabetical order? " + "[y/n]".colorize(:green)
+    puts "Would you like to sort the titles first by alphabetical order? " + "[y/n]".colorize(:green)
     input = gets.strip.downcase
 
     if input == "y" || input == "yes"
+      puts "Sorting...DONE!"
+      puts "SORTED BY GAME TITLE"
       GamespotReview::Game.all.sort_by! {|game| game.title}
     elsif input == "n" || input == "no"
+      puts "SORTED BY LATEST RELEASE/REVIEW DATE"
       return
     elsif input == "exit"
       self.farewell
