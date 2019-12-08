@@ -1,6 +1,6 @@
 # GamespotReview
 
-Welcome to the GamespotReview gem. This gem will scrape the latest 100 videogame reviews from https://www.gamespot.com/. A summary of the information about each videogame, along with links to the full text review, will be presented to the user.
+Welcome to the GamespotReview gem. This gem will scrape the latest 100 videogame reviews from https://www.gamespot.com/. A list will be presented to the user, who will then be able to select a particular game to find out more information about it. An in-depth summary of the information about the selected videogame such as its release date and console availability, including links to the review author's profile and to their full text review online, will then be displayed for the user's interaction.
 
 ## Installation
 
