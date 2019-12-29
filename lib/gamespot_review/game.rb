@@ -1,5 +1,5 @@
 class GamespotReview::Game
-  attr_accessor :title, :score, :blurb, :review_url, :review_console, :release_date, :reviewer, :reviewer_profile, :review_date
+  attr_accessor :title, :score, :blurb, :review_url, :review_console, :release_date, :reviewer, :reviewer_profile, :review_date, :counter
   @@all = []
 
   def initialize(title, score, blurb, review_url)
@@ -8,6 +8,7 @@ class GamespotReview::Game
     @blurb = blurb
     @review_url = review_url
     @review_console = []
+    # @counter = 0      # Variable to check how many times scraper runs for the selected game
     @@all << self
   end
 
@@ -40,16 +41,20 @@ class GamespotReview::Game
   end
 
   def self.add_and_show_game_info(game_selected)
-    self.all[game_selected-1].add_attributes
+    self.all[game_selected-1].check_or_add_attributes
     self.all[game_selected-1].show_info
   end
 
-  def add_attributes
-    more_info = GamespotReview::Scraper.get_page_info(@review_url)
-    @release_date = more_info.css("ul.kubrick-info__releasedate li span").first.text.sub('released', '')
-    @reviewer = more_info.css("p.news-byline a").text.sub(/(@.*)/, '')
-    @reviewer_profile = more_info.css("p.news-byline a").empty? ? "Not available" : "https://www.gamespot.com" + more_info.css("p.news-byline a").first["href"]
-    @review_date = more_info.css("p.news-byline time").text.sub(/( a.*)/, '')
+  def check_or_add_attributes
+    if @release_date.nil?
+      more_info = GamespotReview::Scraper.get_page_info(@review_url)
+      @release_date = more_info.css("ul.kubrick-info__releasedate li span").first.text.sub('released', '')
+      @reviewer = more_info.css("p.news-byline a").text.sub(/(@.*)/, '')
+      @reviewer_profile = more_info.css("p.news-byline a").empty? ? "Not available" : "https://www.gamespot.com" + more_info.css("p.news-byline a").first["href"]
+      @review_date = more_info.css("p.news-byline time").text.sub(/( a.*)/, '')
+      # @counter += 1     # Scraper counter; value should equal 1 no matter how many times game is selected
+    end
+    # binding.pry
   end
 
   def show_info
